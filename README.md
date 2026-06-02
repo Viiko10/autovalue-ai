@@ -88,11 +88,11 @@ autovalue-ai/
 
 ## Blocks
 
-| Block | Method | Week |
-|---|---|---|
-| Computer Vision | CLIP zero-shot (HuggingFace) | 7 |
-| ML Numeric Data | GradientBoosting + RandomizedSearchCV | 1–4 |
-| NLP | GPT-4o-mini + Prompt Engineering + RAG | 9–12 |
+| Block | Method |
+|---|---|
+| Computer Vision | CLIP zero-shot (HuggingFace) |
+| ML Numeric Data | GradientBoosting + RandomizedSearchCV |
+| NLP | GPT-4o-mini + Prompt Engineering + RAG |
 
 ## Ethics
 
