@@ -153,7 +153,7 @@ The RMSE of £5,451 should be understood in context: the dataset spans prices fr
 
 - Feature importance (GradientBoosting): `year` and `mileage` are the two dominant features (combined ~55% importance), followed by `car_age` and `km_per_year`. Categorical features (`make`, `transmission`, `fuel_type`) contribute ~25% collectively. `condition_score` (from CV block) contributes ~3–5% — modest but consistent, as expected for a noisy zero-shot signal. See [`notebooks/ml_training.ipynb`](notebooks/ml_training.ipynb) (Feature Importance cell) and `demo/feature_importance.png`.
 
-- Error analysis — representative prediction errors on the test set:
+- Error analysis — representative prediction errors on the test set (computed via `predict_price()`, [`src/ml_block.py`, lines 251–290](src/ml_block.py#L251-L290)):
 
 | Vehicle | Actual | Predicted | Error | Likely cause |
 | --- | --- | --- | --- | --- |
@@ -209,7 +209,7 @@ See [`src/nlp_block.py`, lines 21–55](src/nlp_block.py#L21-L55).
 #### 2B.5 Evaluation and Error Analysis
 - Evaluation strategy: Qualitative grounding check — does the answer reference the `<similar_listings>` evidence? Does it stay within the XML context? (Week 12: Grounding criterion). Manual review of 10 sample outputs across different makes, price ranges and conditions.
 
-- RAG impact — comparison of outputs with and without retrieval (same car, same model, same prompt structure):
+- RAG impact — comparison of outputs with and without retrieval (same car, same model, same prompt structure). The three prompt iterations correspond directly to the changes in `build_explanation_prompt()` ([`src/nlp_block.py`, lines 21–55](src/nlp_block.py#L21-L55)) and `get_similar_cars()` ([`src/ml_block.py`, lines 293–316](src/ml_block.py#L293-L316)):
 
 | Question | Without retrieval (Iteration 1) | With RAG (Iteration 3) | Assessment |
 | --- | --- | --- | --- |
@@ -258,7 +258,7 @@ See [`src/nlp_block.py`, lines 21–55](src/nlp_block.py#L21-L55).
 See [`src/cv_block.py`, lines 30–46](src/cv_block.py#L30-L46).
 
 #### 2C.5 Evaluation and Error Analysis
-- Evaluation strategy: Manual visual inspection of 10 car photos across condition categories. Each image was independently assessed by a human, then compared with CLIP's output. A prediction is considered correct if the CLIP label matches the human label exactly or differs by at most one category.
+- Evaluation strategy: Manual visual inspection of 10 car photos across condition categories. Each image was independently assessed by a human, then compared with CLIP's output via `get_condition_score()` ([`src/cv_block.py`, lines 30–46](src/cv_block.py#L30-L46)). The four `DAMAGE_LABELS` and `CONDITION_WEIGHTS` used for scoring are defined at [`src/cv_block.py`, lines 10–17](src/cv_block.py#L10-L17). A prediction is considered correct if the CLIP label matches the human label exactly or differs by at most one category.
 
 - Evaluation results:
 
