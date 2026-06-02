@@ -34,7 +34,7 @@ Reference to multiple lines in `train.py`, lines 15-38:
 
 - [x] At least 2 blocks selected
 - [x] Multiple and different data sources used
-- [ ] Deployment URL provided
+- [x] Deployment URL provided
 - [x] Required GitHub users added to repository (`jasminh`, `bkuehnis`)
 
 ## Selected AI Blocks
@@ -240,7 +240,7 @@ See [`src/cv_block.py`, lines 30–46](src/cv_block.py#L30-L46).
 
 ## 3. Deployment
 
-- Deployment URL: *(HuggingFace Spaces — to be added after deployment)*
+- Deployment URL: https://huggingface.co/spaces/Viiko10/autovalue-ai
 - Main user flow:
   1. User uploads car photo (optional) → CLIP scores condition
   2. User enters make/model/year/mileage/fuel/transmission → GradientBoosting predicts price
