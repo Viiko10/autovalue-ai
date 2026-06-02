@@ -217,7 +217,7 @@ AutoValue AI is a data-driven decision-support tool, not a professional appraisa
 **You are interacting with an AI system.** All price estimates are indicative only. For high-value transactions, a professional vehicle inspection is recommended.
 
 ---
-*ZHAW Wirtschaftsinformatik — Modul KI-Anwendungen, FS2026*
+*ZHAW Wirtschaftsinformatik — Modul KI-Anwendungen, FS2026 | Viktor Zlatkov*
 """)
 
     return demo
