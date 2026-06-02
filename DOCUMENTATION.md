@@ -26,7 +26,7 @@ Reference to multiple lines in `train.py`, lines 15-38:
 
 - Project title: AutoValue AI — KI-gestützte Gebrauchtwagenpreisbewertung
 - Student: Viktor (ZHAW Wirtschaftsinformatik, Sem 6)
-- GitHub repository URL: *(to be added after push)*
+- GitHub repository URL: https://github.com/Viiko10/autovalue-ai
 - Deployment URL: *(to be added after HuggingFace Spaces deployment)*
 - Submission date: 07.06.2026
 
@@ -35,7 +35,7 @@ Reference to multiple lines in `train.py`, lines 15-38:
 - [x] At least 2 blocks selected
 - [x] Multiple and different data sources used
 - [ ] Deployment URL provided
-- [ ] Required GitHub users added to repository (`jasminh`, `bkuehnis`)
+- [x] Required GitHub users added to repository (`jasminh`, `bkuehnis`)
 
 ## Selected AI Blocks
 
