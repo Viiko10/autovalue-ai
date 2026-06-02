@@ -202,29 +202,22 @@ def build_ui() -> gr.Blocks:
 
         with gr.Tab("About"):
             gr.Markdown("""
-## AutoValue AI — System Overview
+## About AutoValue AI
 
-**Pipeline:** Car Photo → CV Condition Score → ML Price Prediction → NLP Explanation
+AutoValue AI is an AI-powered tool that estimates the market price of a used car. Upload a photo of the vehicle, enter a few details — make, model, year, mileage, fuel type and transmission — and the system returns a price estimate along with a plain-language explanation of the key factors behind it.
 
-| Block | Technology |
-|---|---|
-| Computer Vision | CLIP zero-shot (openai/clip-vit-base-patch32) |
-| ML Prediction | GradientBoosting + RandomizedSearchCV |
-| NLP Explanation | GPT-4o-mini + RAG from dataset |
+### How it works
 
-**Dataset:** UK Used Cars (Kaggle) — 108,535 rows, 11 makes
-**ML Results:** RMSE = GBP 5,451 | R² = 0.693 | MAPE = 18.4% | 5-fold CV RMSE = 5,555 ± 42
+The estimate is produced in three steps. First, the photo is analysed to assess the vehicle's condition. This score is then combined with the structured vehicle data to generate a price prediction. Finally, a language model explains the result in context, drawing on comparable listings from the training dataset.
 
-**EU AI Act Classification:** Limited-Risk AI System
-Chatbot discloses AI nature. All estimates are advisory — not binding.
+### What this tool is — and what it is not
 
-**Ethical considerations:**
-- Prices are estimates only, based on UK market data
-- Model may reflect dataset biases (UK market, limited EV data)
-- Condition score depends on image quality and angle (CLIP limitations)
-- Human review recommended for high-value transactions
+AutoValue AI is a data-driven decision-support tool, not a professional appraisal. Estimates are based on a dataset of UK used car listings and may not reflect current Swiss or European market conditions. Factors such as service history, optional extras and interior condition are not captured.
 
-*ZHAW Wirtschaftsinformatik, Modul KI-Anwendungen, FS2026*
+**You are interacting with an AI system.** All price estimates are indicative only. For high-value transactions, a professional vehicle inspection is recommended.
+
+---
+*ZHAW Wirtschaftsinformatik — Modul KI-Anwendungen, FS2026*
 """)
 
     return demo
