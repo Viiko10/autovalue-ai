@@ -241,10 +241,18 @@ _cache: dict = {}
 
 def _download_artefacts_if_missing() -> None:
     if os.path.exists(MODEL_PATH):
-        return
+        try:
+            joblib.load(MODEL_PATH)
+            return
+        except Exception:
+            print("Existing model artefacts are incompatible — retraining...")
+            os.remove(MODEL_PATH)
+
+    # Try downloading pre-trained artefacts first
     try:
         from huggingface_hub import hf_hub_download
         print("Downloading model artefacts from HuggingFace...")
+        os.makedirs(MODELS_DIR, exist_ok=True)
         for fname in ["best_model.joblib", "encoder.joblib", "feature_cols.joblib", "scaler.joblib", "train_data.joblib"]:
             hf_hub_download(
                 repo_id="Viiko10/autovalue-ai-models",
@@ -252,9 +260,33 @@ def _download_artefacts_if_missing() -> None:
                 repo_type="model",
                 local_dir=MODELS_DIR,
             )
-            print(f"  Downloaded {fname}")
+        # Verify the downloaded model loads correctly
+        joblib.load(MODEL_PATH)
+        print("Model artefacts downloaded and verified.")
+        return
     except Exception as e:
-        print(f"Could not download model artefacts: {e}")
+        print(f"Download failed or incompatible: {e}")
+
+    # Fallback: retrain from train_data.joblib if available
+    train_data_path = TRAIN_DATA_PATH
+    if os.path.exists(train_data_path):
+        print("Retraining model from training data (first startup, ~2 min)...")
+        df = joblib.load(train_data_path)
+        X, encoder, feature_cols = build_feature_matrix(df, fit=True)
+        y = df["price"].values
+        X_train, X_test, y_train, y_test = __import__("sklearn.model_selection", fromlist=["train_test_split"]).train_test_split(X, y, test_size=0.2, random_state=42)
+        model = GradientBoostingRegressor(n_estimators=100, max_depth=5, learning_rate=0.1, subsample=0.8, random_state=42)
+        model.fit(X_train, y_train)
+        scaler = __import__("sklearn.preprocessing", fromlist=["StandardScaler"]).StandardScaler()
+        scaler.fit(X_train)
+        os.makedirs(MODELS_DIR, exist_ok=True)
+        joblib.dump(model, MODEL_PATH)
+        joblib.dump(scaler, SCALER_PATH)
+        joblib.dump(encoder, ENCODER_PATH)
+        joblib.dump(feature_cols, FEATURE_COLS_PATH)
+        print("Retraining complete.")
+    else:
+        print("No training data available. Run training locally first.")
 
 
 def _load_artefacts() -> None:
