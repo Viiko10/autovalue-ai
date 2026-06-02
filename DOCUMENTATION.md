@@ -27,7 +27,7 @@ Reference to multiple lines in `train.py`, lines 15-38:
 - Project title: AutoValue AI — KI-gestützte Gebrauchtwagenpreisbewertung
 - Student: Viktor (ZHAW Wirtschaftsinformatik, Sem 6)
 - GitHub repository URL: https://github.com/Viiko10/autovalue-ai
-- Deployment URL: *(to be added after HuggingFace Spaces deployment)*
+- Deployment URL: https://huggingface.co/spaces/Viiko10/autovalue-ai
 - Submission date: 07.06.2026
 
 ### Mandatory Setup Checks
