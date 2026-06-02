@@ -242,18 +242,17 @@ _cache: dict = {}
 def _download_artefacts_if_missing() -> None:
     if os.path.exists(MODEL_PATH):
         return
-    space_id = os.getenv("SPACE_ID")
-    if not space_id:
-        return
     try:
         from huggingface_hub import hf_hub_download
+        print("Downloading model artefacts from HuggingFace...")
         for fname in ["best_model.joblib", "encoder.joblib", "feature_cols.joblib", "scaler.joblib", "train_data.joblib"]:
             hf_hub_download(
-                repo_id=space_id,
-                filename=f"models/{fname}",
-                repo_type="space",
-                local_dir=".",
+                repo_id="Viiko10/autovalue-ai-models",
+                filename=fname,
+                repo_type="model",
+                local_dir=MODELS_DIR,
             )
+            print(f"  Downloaded {fname}")
     except Exception as e:
         print(f"Could not download model artefacts: {e}")
 
