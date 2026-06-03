@@ -153,7 +153,7 @@ The RMSE of £5,455 should be understood in context: the dataset spans prices fr
 
 - Feature importance (GradientBoosting): `year` and `mileage` are the two dominant features (combined ~55% importance), followed by `car_age` and `km_per_year`. Categorical features (`make`, `transmission`, `fuel_type`) contribute ~25% collectively. `condition_score` (from CV block) contributes ~3–5% — modest but consistent, as expected for a noisy zero-shot signal. See [`notebooks/ml_training.ipynb`](notebooks/ml_training.ipynb) (Feature Importance cell) and `demo/feature_importance.png`.
 
-- Error analysis — representative prediction errors on the test set (computed via `predict_price()`, [`src/ml_block.py`, lines 251–290](src/ml_block.py#L251-L290)):
+- Error analysis — representative prediction errors on the test set (computed via `predict_price()`, [`src/ml_block.py`, lines 302–341](src/ml_block.py#L302-L341)):
 
 | Vehicle | Actual | Predicted | Error | Likely cause |
 | --- | --- | --- | --- | --- |
@@ -183,7 +183,7 @@ Common patterns: the model systematically underestimates high-performance or spe
 #### 2B.2 Preprocessing and Prompt Design
 - Text preprocessing: Car attributes are formatted into XML-tagged blocks (`<car_data>`, `<similar_listings>`) following Week 10 prompt injection pattern. Numeric values are formatted for readability (e.g., `{mileage:,.0f} km`).
 - Prompt design or retrieval setup:
-  - **RAG retrieval:** pandas filter on `make` (exact), `year` (±2), `mileage` (±40%) → top-3 similar cars. No vector DB needed for structured data — structured filter is equivalent to Hybrid Search (Week 12). See [`src/ml_block.py`, lines 293–316](src/ml_block.py#L293-L316).
+  - **RAG retrieval:** pandas filter on `make` (exact), `year` (±2), `mileage` (±40%) → top-3 similar cars. No vector DB needed for structured data — structured filter is equivalent to Hybrid Search (Week 12). See [`src/ml_block.py`, lines 344–368](src/ml_block.py#L344-L368).
   - **Prompt structure** (Week 10 — Context + Instructions + Description + Input):
     - System prompt: role ("AutoValue AI"), task ("explain price"), description ("input = structured car data"), format ("3-4 sentences")
     - User prompt: question first → grounding constraint → `<car_data>` XML → `<similar_listings>` XML (Week 12 pattern: information placed at start and end)
@@ -209,7 +209,7 @@ See [`src/nlp_block.py`, lines 21–55](src/nlp_block.py#L21-L55).
 #### 2B.5 Evaluation and Error Analysis
 - Evaluation strategy: Qualitative grounding check — does the answer reference the `<similar_listings>` evidence? Does it stay within the XML context? (Week 12: Grounding criterion). Manual review of 10 sample outputs across different makes, price ranges and conditions.
 
-- RAG impact — comparison of outputs with and without retrieval (same car, same model, same prompt structure). The three prompt iterations correspond directly to the changes in `build_explanation_prompt()` ([`src/nlp_block.py`, lines 21–55](src/nlp_block.py#L21-L55)) and `get_similar_cars()` ([`src/ml_block.py`, lines 293–316](src/ml_block.py#L293-L316)):
+- RAG impact — comparison of outputs with and without retrieval (same car, same model, same prompt structure). The three prompt iterations correspond directly to the changes in `build_explanation_prompt()` ([`src/nlp_block.py`, lines 21–55](src/nlp_block.py#L21-L55)) and `get_similar_cars()` ([`src/ml_block.py`, lines 344–368](src/ml_block.py#L344-L368)):
 
 | Question | Without retrieval (Iteration 1) | With RAG (Iteration 3) | Assessment |
 | --- | --- | --- | --- |
