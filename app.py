@@ -169,6 +169,16 @@ def build_ui() -> gr.Blocks:
                     price_out = gr.Markdown(label="ML Price Prediction")
                     explanation_out = gr.Markdown(label="NLP Explanation")
 
+            gr.Examples(
+                examples=[
+                    [None, "BMW", "3 Series", 2019, 45000, "Diesel", "Automatic"],
+                    [None, "Volkswagen", "Golf", 2017, 80000, "Petrol", "Manual"],
+                    [None, "Audi", "A4", 2020, 30000, "Diesel", "Automatic"],
+                ],
+                inputs=[car_image, make_in, model_in, year_in, mileage_in, fuel_in, trans_in],
+                cache_examples=False,
+            )
+
             estimate_btn.click(
                 fn=run_pipeline,
                 inputs=[car_image, make_in, model_in, year_in, mileage_in, fuel_in, trans_in],

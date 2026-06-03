@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error, r2_score
 from sklearn.model_selection import (
     RandomizedSearchCV,
     cross_val_score,
@@ -135,7 +135,7 @@ def build_feature_matrix(
 
 
 def evaluate_model(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    rmse = float(np.sqrt(mean_squared_error(y_true, y_pred)))
+    rmse = float(root_mean_squared_error(y_true, y_pred))
     mae = float(mean_absolute_error(y_true, y_pred))
     r2 = float(r2_score(y_true, y_pred))
     mape = float(np.mean(np.abs((y_true - y_pred) / (np.abs(y_true) + 1e-8))) * 100)
@@ -181,12 +181,12 @@ def train_and_save(data_dir: str = "data") -> dict:
     X_tr_s = scaler.fit_transform(X_train)
     X_te_s = scaler.transform(X_test)
     mlp = MLPRegressor(
-        hidden_layer_sizes=(64, 32),
+        hidden_layer_sizes=(16, 16),
         activation="relu",
         solver="adam",
-        max_iter=300,
-        learning_rate_init=0.001,
+        max_iter=200,
         random_state=42,
+        verbose=True,
     )
     mlp.fit(X_tr_s, y_train)
     results["MLP"] = evaluate_model(y_test, mlp.predict(X_te_s))
@@ -212,7 +212,7 @@ def train_and_save(data_dir: str = "data") -> dict:
         param_distributions=param_dist,
         n_iter=10, cv=3,
         scoring="neg_root_mean_squared_error",
-        random_state=42, n_jobs=-1, verbose=0,
+        random_state=0, n_jobs=-1, verbose=0,
     )
     rscv.fit(X_train, y_train)
     best_gb = rscv.best_estimator_
