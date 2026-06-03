@@ -181,12 +181,12 @@ Common patterns: the model systematically underestimates high-performance or spe
 | 2 | UK Used Cars Dataset (same as ML block) | Pandas DataFrame (in-memory) | ~100,000 rows | RAG knowledge base: retrieve 3 similar cars per query |
 
 #### 2B.2 Preprocessing and Prompt Design
-- Text preprocessing: Car attributes are formatted into XML-tagged blocks (`<car_data>`, `<similar_listings>`) following Week 10 prompt injection pattern. Numeric values are formatted for readability (e.g., `{mileage:,.0f} km`).
+- Text preprocessing: Car attributes and similar listings are combined into a single `<information>` XML block following the Week 12 Slide 26 prompt template. Numeric values are formatted for readability (e.g., `{mileage:,.0f} km`).
 - Prompt design or retrieval setup:
   - **RAG retrieval:** pandas filter on `make` (exact), `year` (±2), `mileage` (±40%) → top-3 similar cars. No vector DB needed for structured data — structured filter is equivalent to Hybrid Search (Week 12). See [`src/ml_block.py`, lines 344–368](src/ml_block.py#L344-L368).
-  - **Prompt structure** (Week 10 — Context + Instructions + Description + Input):
+  - **Prompt structure** (Week 12 Slide 26 — exact template):
     - System prompt: role ("AutoValue AI"), task ("explain price"), description ("input = structured car data"), format ("3-4 sentences")
-    - User prompt: question first → grounding constraint → `<car_data>` XML → `<similar_listings>` XML (Week 12 pattern: information placed at start and end)
+    - User prompt: `Answer the following question: {question}` → `Base your answer solely on the information given:` → `<information> {information} </information>`
   - See [`src/nlp_block.py`, lines 21–55](src/nlp_block.py#L21-L55).
 
 #### 2B.3 Approach Selection

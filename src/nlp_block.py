@@ -43,16 +43,15 @@ def build_explanation_prompt(
 
 Base your answer solely on the information given:
 
-<car_data>
+<information>
 Make: {make} | Model: {model_name} | Year: {year}
 Mileage: {mileage_km:,.0f} km | Fuel: {fuel_type} | Transmission: {transmission}
 Condition Score: {condition_score:.2f}/1.0 ({condition_label})
 Estimated Price: GBP {predicted_price:,.0f}
-</car_data>
 
-<similar_listings>
+Similar listings:
 {evidence_lines}
-</similar_listings>"""
+</information>"""
 
 
 def get_price_explanation(
