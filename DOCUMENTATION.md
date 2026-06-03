@@ -60,7 +60,7 @@ Evidence hint: Show where each selected block contributes to the final system.
 ### 1.1 Problem Definition
 - Problem statement: Used car buyers and sellers lack transparent, data-driven price references. Manual valuations are time-consuming and inconsistent.
 - Goal: Build an AI pipeline that estimates the market price of a used car from structured data (make, year, mileage) and a photo, and explains the estimate in natural language.
-- Success criteria: RMSE < 3,000 GBP on test set (aspirational target; achieved RMSE = 5,451 GBP — acceptable given the UK dataset's wide price range of £500–£200,000 and heterogeneous makes); RAG-grounded NLP explanation that references comparable market listings; working Gradio demo on HuggingFace Spaces.
+- Success criteria: RMSE < 3,000 GBP on test set (aspirational target; achieved RMSE = 5,455 GBP — acceptable given the UK dataset's wide price range of £500–£200,000 and heterogeneous makes); RAG-grounded NLP explanation that references comparable market listings; working Gradio demo on HuggingFace Spaces.
 
 ### 1.2 Integration Logic
 - How the selected blocks interact: The CV block analyses a user-uploaded car photo and outputs a `condition_score` ∈ [0,1]. This score is passed as an additional feature to the ML block alongside structured car metadata. The ML block produces a price estimate which, together with the `condition_score` and RAG-retrieved similar listings, is fed to the NLP block for a grounded explanation.
@@ -133,23 +133,23 @@ Complete only selected blocks. Mark non-selected block sections as N/A.
 | --- | --- | --- | --- | --- | --- |
 | 1 | Establish baseline | Raw features, no engineering | LinearRegression | RMSE 6,567 GBP, R²=0.554 | — |
 | 2 | Improve with ensembles | Add car_age, km_per_year, is_luxury, is_sport | RandomForest, GradientBoosting | RMSE 5,597 GBP, R²=0.676 | −15% |
-| 3 | Neural net + hyperparameter tuning | MLPRegressor + RandomizedSearchCV on GB | MLPRegressor (R²=0.685), GradientBoosting_tuned | RMSE 5,451 GBP, R²=0.693 | −3% |
+| 3 | Neural net + hyperparameter tuning | MLPRegressor(16,16) + RandomizedSearchCV on GB | MLPRegressor (R²=0.668), GradientBoosting_tuned | RMSE 5,455 GBP, R²=0.692 | −3% |
 
 See [`src/ml_block.py`, lines 145–232](src/ml_block.py#L145-L232) for full `train_and_save()` implementation.
 
 #### 2A.5 Evaluation and Error Analysis
 - Metrics used: RMSE, MAE, R², MAPE (all computed in `evaluate_model()`, [`src/ml_block.py`, lines 137–142](src/ml_block.py#L137-L142)); 5-fold cross-validation on GradientBoosting.
-- Final results (GradientBoosting_tuned, best params: n_estimators=100, max_depth=5, learning_rate=0.1, subsample=0.8):
+- Final results (GradientBoosting_tuned, best params: n_estimators=100, max_depth=6, learning_rate=0.05, subsample=1.0, min_samples_split=10):
 
 | Metric | Value | Interpretation |
 | --- | --- | --- |
-| RMSE | £5,451 | Typical absolute error; acceptable given price range £500–£200,000 |
-| MAE | £3,199 | Median absolute error — most predictions off by ~£3,200 |
-| R² | 0.693 | Model explains 69.3% of price variance |
+| RMSE | £5,455 | Typical absolute error; acceptable given price range £500–£200,000 |
+| MAE | £3,184 | Median absolute error — most predictions off by ~£3,200 |
+| R² | 0.692 | Model explains 69.2% of price variance |
 | MAPE | 18.4% | Average relative error of 18.4% |
-| 5-fold CV RMSE | £5,555 ± 42 | Low variance across folds — model generalises well |
+| 5-fold CV RMSE | £5,556 ± 39 | Low variance across folds — model generalises well |
 
-The RMSE of £5,451 should be understood in context: the dataset spans prices from £500 to over £200,000 across 11 different makes. A mean absolute error of £3,199 is reasonable for a model that has no access to trim level, optional extras or service history. A professional appraiser with full vehicle history would be expected to do better; for a data-driven first estimate, this is a practical result.
+The RMSE of £5,455 should be understood in context: the dataset spans prices from £500 to over £200,000 across 11 different makes. A mean absolute error of £3,184 is reasonable for a model that has no access to trim level, optional extras or service history. A professional appraiser with full vehicle history would be expected to do better; for a data-driven first estimate, this is a practical result.
 
 - Feature importance (GradientBoosting): `year` and `mileage` are the two dominant features (combined ~55% importance), followed by `car_age` and `km_per_year`. Categorical features (`make`, `transmission`, `fuel_type`) contribute ~25% collectively. `condition_score` (from CV block) contributes ~3–5% — modest but consistent, as expected for a noisy zero-shot signal. See [`notebooks/ml_training.ipynb`](notebooks/ml_training.ipynb) (Feature Importance cell) and `demo/feature_importance.png`.
 
@@ -343,7 +343,7 @@ Evidence hint: Add screenshots or short demo references.
   ```
 
 - Reproducibility notes:
-  - All random operations use `random_state=42`.
+  - Most random operations use `random_state=42` (train/test split, GradientBoosting, RandomForest, MLPRegressor). `RandomizedSearchCV` uses `random_state=0` per course convention (Week 2).
   - Train/test split: 80/20, stratified by price range is not applied (regression task).
   - Python ≥ 3.11 required. All dependency versions pinned in `pyproject.toml`.
   - Pre-trained CLIP model downloaded automatically via HuggingFace Hub on first run.
