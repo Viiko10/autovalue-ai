@@ -20,6 +20,11 @@ from src.nlp_block import chat_with_autovalue, get_price_explanation
 FUEL_OPTIONS = ["Petrol", "Diesel", "Hybrid", "Electric"]
 TRANSMISSION_OPTIONS = ["Manual", "Automatic"]
 
+SUPPORTED_MAKES = {
+    "audi", "bmw", "mercedes-benz", "ford", "hyundai",
+    "skoda", "toyota", "vauxhall", "volkswagen",
+}
+
 
 _car_context: dict = {}
 _chat_history: list[dict] = []
@@ -69,6 +74,13 @@ def run_pipeline(
             f"*Based on make, model, year, mileage, fuel type, transmission, "
             f"and CV condition score.*"
         )
+        if make.lower().strip() not in SUPPORTED_MAKES:
+            price_text += (
+                "\n\n> **Warning:** This make is not in the training data. "
+                "The model was trained on: Audi, BMW, Mercedes-Benz, Ford, Hyundai, "
+                "Skoda, Toyota, Vauxhall, Volkswagen. "
+                "Estimates for other makes are unreliable."
+            )
     except Exception as e:
         predicted_price = 0.0
         price_text = f"Model not loaded. Run training first.\n\n`{e}`"
