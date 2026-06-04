@@ -159,6 +159,11 @@ def build_ui() -> gr.Blocks:
         )
 
         with gr.Tab("Price Estimator"):
+            gr.Markdown(
+                "> **Supported makes:** Audi · BMW · Ford · Hyundai · Mercedes-Benz · "
+                "Skoda · Toyota · Vauxhall · Volkswagen  \n"
+                "> Estimates for other makes are outside the training data and will not be reliable."
+            )
             with gr.Row():
                 with gr.Column(scale=1):
                     gr.Markdown("### Car Photo")
