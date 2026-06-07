@@ -25,7 +25,7 @@ Reference to multiple lines in `train.py`, lines 15-38:
 ## Project Metadata
 
 - Project title: AutoValue AI — KI-gestützte Gebrauchtwagenpreisbewertung
-- Student: Viktor (ZHAW Wirtschaftsinformatik, Sem 6)
+- Student: Viktor Zlatkov (ZHAW Business Information Systems, Semester 6)
 - GitHub repository URL: https://github.com/Viiko10/autovalue-ai
 - Deployment URL: https://huggingface.co/spaces/Viiko10/autovalue-ai
 - Submission date: 07.06.2026
