@@ -104,7 +104,9 @@ Complete only selected blocks. Mark non-selected block sections as N/A.
 #### 2A.2 Preprocessing, EDA and Features
 - Cleaning steps: Remove rows with price < 500 or > 200,000 (outliers). Drop rows with missing `price`, `year`, or `mileage`. Combine 11 make-specific CSVs, add `make` column from filename. See [`src/ml_block.py`, lines 53–86](src/ml_block.py#L53-L86).
 - Preprocessing steps: OrdinalEncoder for categorical features (`make`, `fuel_type`, `transmission`) with `handle_unknown='use_encoded_value'`. StandardScaler applied only for MLPRegressor. See [`src/ml_block.py`, lines 111–134](src/ml_block.py#L111-L134).
-- EDA key findings (see [`notebooks/ml_training.ipynb`](notebooks/ml_training.ipynb) and `demo/eda.png`):
+- EDA key findings (see [`notebooks/ml_training.ipynb`](notebooks/ml_training.ipynb)):
+
+  ![EDA Overview](demo/eda.png)
 
   | Chart | Key finding | Impact on modelling |
   | --- | --- | --- |
@@ -151,7 +153,11 @@ See [`src/ml_block.py`, lines 145–232](src/ml_block.py#L145-L232) for full `tr
 
 The RMSE of £5,455 should be understood in context: the dataset spans prices from £500 to over £200,000 across 11 different makes. A mean absolute error of £3,184 is reasonable for a model that has no access to trim level, optional extras or service history. A professional appraiser with full vehicle history would be expected to do better; for a data-driven first estimate, this is a practical result.
 
-- Feature importance (GradientBoosting): `year` and `mileage` are the two dominant features (combined ~55% importance), followed by `car_age` and `km_per_year`. Categorical features (`make`, `transmission`, `fuel_type`) contribute ~25% collectively. `condition_score` (from CV block) contributes ~3–5% — modest but consistent, as expected for a noisy zero-shot signal. See [`notebooks/ml_training.ipynb`](notebooks/ml_training.ipynb) (Feature Importance cell) and `demo/feature_importance.png`.
+- Feature importance (GradientBoosting): `year` and `mileage` are the two dominant features (combined ~55% importance), followed by `car_age` and `km_per_year`. Categorical features (`make`, `transmission`, `fuel_type`) contribute ~25% collectively. `condition_score` (from CV block) contributes ~3–5% — modest but consistent, as expected for a noisy zero-shot signal. See [`notebooks/ml_training.ipynb`](notebooks/ml_training.ipynb) (Feature Importance cell).
+
+  ![Feature Importance](demo/feature_importance.png)
+
+  ![Model Comparison](demo/model_comparison.png)
 
 - Error analysis — representative prediction errors on the test set (computed via `predict_price()`, [`src/ml_block.py`, lines 302–341](src/ml_block.py#L302-L341)):
 
@@ -299,10 +305,18 @@ See [`src/cv_block.py`, lines 30–46](src/cv_block.py#L30-L46).
   3. GPT-4o-mini generates RAG-grounded explanation citing comparable listings
   4. User asks follow-up questions in chatbot tab; chat history maintained across turns
 - Screenshots:
-  - [`demo/screenshot_1_estimator.png`](demo/screenshot_1_estimator.png) — Price Estimator tab (input form)
-  - [`demo/screenshot_2_estimator.png`](demo/screenshot_2_estimator.png) — Price Estimator tab with result (CV condition score, ML price, NLP explanation)
-  - [`demo/screenshot_chat.png`](demo/screenshot_chat.png) — Chat with AutoValue AI (follow-up question + GPT-4o-mini response)
-  - [`demo/screenshot_about.png`](demo/screenshot_about.png) — About tab (system overview, pipeline, metrics)
+
+  **Price Estimator — Input form**
+  ![Price Estimator input](demo/screenshot_1_estimator.png)
+
+  **Price Estimator — Results (CV condition score, ML price, NLP explanation)**
+  ![Price Estimator results](demo/screenshot_2_estimator.png)
+
+  **Chat with AutoValue AI**
+  ![Chat](demo/screenshot_chat.png)
+
+  **About tab**
+  ![About](demo/screenshot_about.png)
 
 Guidance hint: Deployment must be usable.
 Evidence hint: Add screenshots or short demo references.
